@@ -1,0 +1,9 @@
+﻿namespace names.backend.Models
+{
+    public class AppSettings
+    {
+        public string AgifyBaseUrl { get; set; } = string.Empty;
+        public string GenderizeBaseUrl {  get; set; } = string.Empty;
+        public string ApiFirstCountriesBaseUrl {  get; set; } = string.Empty;
+    }
+}
