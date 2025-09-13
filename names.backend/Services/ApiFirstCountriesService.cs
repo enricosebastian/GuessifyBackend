@@ -75,7 +75,7 @@ namespace names.backend.Services
         /// <returns></returns>
         public async Task<ApiFirstCountriesResponseDto> GetAll()
         {
-            var requestUri = $"{_appSettings.Value.AgifyBaseUrl}/countries";
+            var requestUri = $"{_appSettings.Value.ApiFirstCountriesBaseUrl}/countries";
             var httpClient = new HttpClient();
             var response = await httpClient.GetFromJsonAsync<ApiFirstCountriesResponseDto>(requestUri);
             return response;
