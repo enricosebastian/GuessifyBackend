@@ -14,6 +14,16 @@ builder.Services.AddScoped<IAgifyService, AgifyService>();
 builder.Services.AddScoped<IGenderizeService, GenderizeService>();
 builder.Services.AddScoped<IApiFirstCountriesService, ApiFirstCountriesService>();
 
+// Allow endpoint to have a liberating policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,7 +38,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseCors("AllowAll");
 app.UseAuthorization();
 
 app.MapControllerRoute(
