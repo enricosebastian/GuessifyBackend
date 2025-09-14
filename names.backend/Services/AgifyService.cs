@@ -39,7 +39,21 @@ namespace names.backend.Services
             }
 
             var httpClient = new HttpClient();
-            var response = await httpClient.GetFromJsonAsync<AgifyResponseDto>(requestUri);
+
+            AgifyResponseDto? response = null;
+
+            try
+            {
+                response = await httpClient.GetFromJsonAsync<AgifyResponseDto>(requestUri);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching agify data: {ex.Message}");
+
+                requestUri = $"{_appSettings.Value.AgifyBaseUrl}?name={name}";
+                response = await httpClient.GetFromJsonAsync<AgifyResponseDto>(requestUri);
+            }
+
             return response;
         }
 

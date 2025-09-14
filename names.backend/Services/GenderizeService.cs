@@ -38,7 +38,20 @@ namespace names.backend.Services
             }
 
             var httpClient = new HttpClient();
-            var response = await httpClient.GetFromJsonAsync<GenderizeResponseDto>(requestUri);
+            GenderizeResponseDto? response = null;
+
+            try
+            {
+                response = await httpClient.GetFromJsonAsync<GenderizeResponseDto>(requestUri);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching genderize data: {ex.Message}");
+
+                requestUri = $"{_appSettings.Value.GenderizeBaseUrl}?name={name}";
+                response = await httpClient.GetFromJsonAsync<GenderizeResponseDto>(requestUri);
+            }
+            
             return response;
         }
 
