@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using names.backend.Models;
 using names.backend.Services.Interfaces;
 
 namespace names.backend.Controllers
@@ -21,22 +22,51 @@ namespace names.backend.Controllers
         [HttpGet("Get")]
         public async Task<IActionResult> Get(string name, string countryId = "")
         {
-            var agifyResponse = await _agifyService.GetAgifyResult(name, countryId);
-            var genderizeResponse = await _genderizeService.GetGenderizeResult(name, countryId);
+            AgifyResponseDto? agifyResponse = null;
+            GenderizeResponseDto? genderizeResponse = null;
 
-            if (!string.IsNullOrEmpty(countryId))
+            try
             {
-                var data = await _apiFirstCountriesService.Get(countryId);
+                agifyResponse = await _agifyService.GetAgifyResult(name, countryId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in AgifyAndGenderize/Get for Agify: {ex.Message}");
+                return StatusCode(500, new { success = false, error = ex.Message });
+            }
 
+            try
+            {
+                genderizeResponse = await _genderizeService.GetGenderizeResult(name, countryId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in AgifyAndGenderize/Get for Genderize: {ex.Message}");
+                return StatusCode(500, new { success = false, error = ex.Message });
+            }
+
+            if (string.IsNullOrEmpty(countryId))
+            {
                 return Ok(new
                 {
                     name,
                     agifyResponse.Age,
                     genderizeResponse.Gender,
-                    gender_probability = genderizeResponse.Probability,
-                    country = data.Name.Official
+                    gender_probability = genderizeResponse.Probability
                 });
+            }
 
+
+            RestCountriesResponseDto? restCountriesResponse = null;
+
+            try
+            {
+                restCountriesResponse = await _apiFirstCountriesService.Get(countryId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in AgifyAndGenderize/Get for RestCountries: {ex.Message}");
+                return StatusCode(500, new { success = false, error = ex.Message });
             }
 
             return Ok(new
@@ -44,7 +74,9 @@ namespace names.backend.Controllers
                 name,
                 agifyResponse.Age,
                 genderizeResponse.Gender,
-                gender_probability = genderizeResponse.Probability
+                gender_probability = genderizeResponse.Probability,
+                country = restCountriesResponse.Name.Common,
+                fancy_name = restCountriesResponse.Name.Official
             });
         }
     }

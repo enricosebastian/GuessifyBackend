@@ -2,6 +2,8 @@ using names.backend.Models;
 using names.backend.Services;
 using names.backend.Services.Interfaces;
 
+Console.WriteLine("Console log: Web app has started");
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));

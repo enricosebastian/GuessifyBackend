@@ -17,15 +17,31 @@ namespace names.backend.Controllers
         [HttpGet("Get")]
         public async Task<IActionResult> Get(string name, string countryId = "")
         {
-            var response = await _genderizeService.GetGenderizeResult(name, countryId);
-            return Ok(response);
+            try
+            {
+                var response = await _genderizeService.GetGenderizeResult(name, countryId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in Genderize/Get: {ex.Message}");
+                return StatusCode(500, new { success = false, error = ex.Message });
+            }
         }
 
         [HttpGet("GetMany")]
         public async Task<IActionResult> Get([FromQuery] List<string> name)
         {
-            var response = await _genderizeService.GetGenderizeResult(name);
-            return Ok(response);
+            try
+            {
+                var response = await _genderizeService.GetGenderizeResult(name);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in Genderize/GetMany: {ex.Message}");
+                return StatusCode(500, new { success = false, error = ex.Message });
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ namespace names.backend.Services
         {
             if (string.IsNullOrEmpty(appSettings.Value.GenderizeBaseUrl))
             {
+                Console.WriteLine("AppSettings value for Genderize is empty");
                 throw new Exception("AppSettings value for Genderize is empty");
             }
 
@@ -24,6 +25,7 @@ namespace names.backend.Services
 
             if (string.IsNullOrEmpty(name))
             {
+                Console.WriteLine("No name value");
                 throw new Exception("No name value");
             }
 
@@ -61,6 +63,7 @@ namespace names.backend.Services
 
             if (names.Count < 1)
             {
+                Console.WriteLine("Emtpy list of names");
                 throw new Exception("Emtpy list of names");
             }
 
