@@ -9,9 +9,9 @@ namespace names.backend.Controllers
     {
         private readonly IAgifyService _agifyService;
         private readonly IGenderizeService _genderizeService;
-        private readonly IApiFirstCountriesService _apiFirstCountriesService;
+        private readonly IRestCountriesService _apiFirstCountriesService;
 
-        public AgifyAndGenderizeController(IAgifyService agifyService, IGenderizeService genderizeService, IApiFirstCountriesService apiFirstCountriesService)
+        public AgifyAndGenderizeController(IAgifyService agifyService, IGenderizeService genderizeService, IRestCountriesService apiFirstCountriesService)
         {
             _agifyService = agifyService;
             _genderizeService = genderizeService;
@@ -34,7 +34,7 @@ namespace names.backend.Controllers
                     agifyResponse.Age,
                     genderizeResponse.Gender,
                     gender_probability = genderizeResponse.Probability,
-                    country = data.Country
+                    country = data.Name.Official
                 });
 
             }

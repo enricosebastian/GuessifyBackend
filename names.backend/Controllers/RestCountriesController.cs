@@ -6,10 +6,10 @@ namespace names.backend.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ApiFirstCountriesController : Controller
+    public class RestCountriesController : Controller
     {
-        private readonly IApiFirstCountriesService _apiFirstCountriesService;
-        public ApiFirstCountriesController(IApiFirstCountriesService apiFirstCountriesService)
+        private readonly IRestCountriesService _apiFirstCountriesService;
+        public RestCountriesController(IRestCountriesService apiFirstCountriesService)
         {
             _apiFirstCountriesService = apiFirstCountriesService;
         }
@@ -18,7 +18,7 @@ namespace names.backend.Controllers
         public async Task<IActionResult> Get()
         {
             var response = await _apiFirstCountriesService.GetAll();
-            return Ok(response.Data);
+            return Ok(response);
         }
     }
 }

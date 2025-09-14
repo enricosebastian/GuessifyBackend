@@ -5,13 +5,13 @@ using System.Xml.Linq;
 
 namespace names.backend.Services
 {
-    public class ApiFirstCountriesService : IApiFirstCountriesService
+    public class RestCountriesService : IRestCountriesService
     {
         private readonly IOptions<AppSettings> _appSettings;
         
-        public ApiFirstCountriesService(IOptions<AppSettings> appSettings)
+        public RestCountriesService(IOptions<AppSettings> appSettings)
         {
-            if (string.IsNullOrEmpty(appSettings.Value.ApiFirstCountriesBaseUrl))
+            if (string.IsNullOrEmpty(appSettings.Value.RestCountriesBaseUrl))
             {
                 throw new Exception("AppSettings value for ApiFirstCountriesService is empty");
             }
@@ -25,7 +25,7 @@ namespace names.backend.Services
         /// <param name="countryCode"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<ApiFirstCountriesResponseDto> Find(string countryCode)
+        public async Task<List<RestCountriesResponseDto>> Find(string countryCode)
         {
             var requestUri = string.Empty;
 
@@ -39,14 +39,14 @@ namespace names.backend.Services
                 throw new Exception($"Country code \"{countryCode}\" is not ISO-2 format");
             }
 
-            requestUri = $"{_appSettings.Value.ApiFirstCountriesBaseUrl}/countries?q={countryCode}";
+            requestUri = $"{_appSettings.Value.RestCountriesBaseUrl}/alpha/{countryCode}";
 
             var httpClient = new HttpClient();
-            var response = await httpClient.GetFromJsonAsync<ApiFirstCountriesResponseDto>(requestUri);
+            var response = await httpClient.GetFromJsonAsync<List<RestCountriesResponseDto>>(requestUri);
             return response;
         }
 
-        public async Task<CountryInfo> Get(string countryCode)
+        public async Task<RestCountriesResponseDto> Get(string countryCode)
         {
             if (string.IsNullOrEmpty(countryCode))
             {
@@ -59,7 +59,7 @@ namespace names.backend.Services
             }
 
             var result = await Find(countryCode);
-            var countryInfo = result.Data.Where(d => d.Key == countryCode.ToUpper()).FirstOrDefault().Value;
+            var countryInfo = result.Where(r => r.Iso2 == countryCode.ToUpper()).FirstOrDefault();
 
             if (countryInfo == null)
             {
@@ -73,11 +73,11 @@ namespace names.backend.Services
         /// Gets all of the countries
         /// </summary>
         /// <returns></returns>
-        public async Task<ApiFirstCountriesResponseDto> GetAll()
+        public async Task<List<RestCountriesResponseDto>> GetAll()
         {
-            var requestUri = $"{_appSettings.Value.ApiFirstCountriesBaseUrl}/countries";
+            var requestUri = $"{_appSettings.Value.RestCountriesBaseUrl}/all?fields=name,cca2&format=json";
             var httpClient = new HttpClient();
-            var response = await httpClient.GetFromJsonAsync<ApiFirstCountriesResponseDto>(requestUri);
+            var response = await httpClient.GetFromJsonAsync<List<RestCountriesResponseDto>>(requestUri);
             return response;
         }
     }

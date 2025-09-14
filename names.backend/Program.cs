@@ -12,7 +12,7 @@ builder.Services.AddControllersWithViews();
 // Dependency injected services and repositories
 builder.Services.AddScoped<IAgifyService, AgifyService>();
 builder.Services.AddScoped<IGenderizeService, GenderizeService>();
-builder.Services.AddScoped<IApiFirstCountriesService, ApiFirstCountriesService>();
+builder.Services.AddScoped<IRestCountriesService, RestCountriesService>();
 
 // Allow endpoint to have a liberating policy
 builder.Services.AddCors(options =>
