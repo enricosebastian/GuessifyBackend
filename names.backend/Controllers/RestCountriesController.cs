@@ -15,9 +15,9 @@ namespace names.backend.Controllers
         }
 
         [HttpGet("GetAll")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
-            var response = await _apiFirstCountriesService.GetAll();
+            var response = (await _apiFirstCountriesService.GetAll()).OrderBy(r => r.Name.Official).ToList();
             return Ok(response);
         }
     }
